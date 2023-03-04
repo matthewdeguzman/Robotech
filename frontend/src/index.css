@@ -10,6 +10,27 @@ body {
   font-family: "Quicksand";
   color: #EEEEEE;
 }
+
+button {
+  margin: 20px auto;
+  background-color: #24272A;
+  transition-duration: 0.4s;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  border-radius: 12px;
+  border: 2px solid #77ff85;
+}
+
+button:hover {
+  background-color: #77ff85;
+  color: #EEEEEE;
+  color: black;
+}
 .navbar {
   padding: 20px;
   display: flex;
@@ -70,4 +91,32 @@ body {
 .home .create-schedule:hover {
   background-color: #f1356d;
   color: #EEEEEE;
+}
+
+.task {
+  padding: 10px 16px;
+  width: 300px;
+  margin: 10px 0;
+}
+
+.task-list {
+  position:absolute;
+  left: 0px;
+  bottom: 0px;
+  overflow: auto;
+  width: 350px;
+  height: 500px;
+}
+.task:hover {
+  box-shadow: 1px 3px 5px rgba(0,0,0,0.1);
+}
+.task h2 {
+  font-size: 20px;
+  color: #f1356d;
+  margin-bottom: 8px;
+}
+
+.add-event {
+  position:absolute;
+  left: 10px
 }
