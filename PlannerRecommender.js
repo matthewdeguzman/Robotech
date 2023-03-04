@@ -21,7 +21,7 @@ class Task {
 }
 
 class Day {
-  constructor(day, month, year) {
+  constructor(month, day, year) {
     this.day = day;
     this.month = month;
     this.year = year;
