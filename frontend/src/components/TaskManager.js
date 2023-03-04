@@ -13,16 +13,29 @@ const TaskManager = () => {
         // {name: "Second Task", dueDate: "March 6th", priority: "8", duration: "2 hr", description: "This is the second task", number: "7"}
     ]);
 
+    
+
     function addEvent() {
         
-        setTasks([...tasks, {name: "New Task", dueDate: "March 5th", priority: "10", duration: "3 hr", description: "This is the first task", number: uuidv4()}])
+        setTasks([...tasks, {name: "New Task", dueDate: "March 5th", priority: "10", duration: "3 hr", description: "This is the first task", number: uuidv4()}]);
+        console.log('fedhgfgdf')
     }
+
+    const deleteEvent = (taskNum) => {
+        const newTasks = tasks.filter( task => task.number !== taskNum);
+        setTasks(newTasks);
+    
+    }
+
+    
     return (
         <>
             <button className="add-event" onClick={addEvent}>Add Event</button>
+        
             <div className="scroll-box">
-                <TaskList tasks={tasks}/>
+                <TaskList tasks={tasks} deleteEvent={deleteEvent}/>
             </div>
+            
         </>
     );
 }
