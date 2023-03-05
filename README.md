@@ -1,4 +1,4 @@
-# Schedule Recommender (Name TBA)
+# OneSec
 
 ## Authors
 
