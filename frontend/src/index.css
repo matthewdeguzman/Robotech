@@ -31,6 +31,12 @@ button:hover {
   color: #EEEEEE;
   color: black;
 }
+
+input {
+  background-color:#24272A;
+  border: 0px;
+}
+
 .navbar {
   padding: 20px;
   display: flex;
@@ -40,10 +46,6 @@ button:hover {
   border-bottom: 1px solid #f2f2f2;
 }
 
-input {
-  background-color:#24272A;
-  border: 0px;
-}
 .navbar h1 {
   color: #f1356d;
   align-items: center;
@@ -131,3 +133,4 @@ input {
   position: absolute;
   right: 10px;
 }
+
