@@ -39,6 +39,7 @@ const Task = (props) => {
                 required
                 value={description}
                 onChange={(e) => {task.description = e.target.value; setDescription(e.target.value)}}/></div>
+            <button className="delete" onClick={() => props.deleteEvent(task.number)}>Delete</button>
         </form>
     );
 }

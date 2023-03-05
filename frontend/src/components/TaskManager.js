@@ -19,9 +19,7 @@ const TaskManager = () => {
     const deleteEvent = (taskNum) => {
         const newTasks = tasks.filter( task => task.number !== taskNum);
         setTasks(newTasks);
-    
     }
-
     
     return (
         <>
