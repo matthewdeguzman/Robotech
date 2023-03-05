@@ -23,7 +23,7 @@ const Task = (props) => {
                 type="text"
                 required
                 value={dueDate}
-                onChange={(e) => {task.date = e.target.value; setDueDate(e.target.value)}}/></div>
+                onChange={(e) => {task.dueDate = e.target.value; setDueDate(e.target.value)}}/></div>
             <div className="priority"><b>Priority: </b><input
                 type="text"
                 required
@@ -39,6 +39,7 @@ const Task = (props) => {
                 required
                 value={description}
                 onChange={(e) => {task.description = e.target.value; setDescription(e.target.value)}}/></div>
+            <button className="delete" onClick={() => props.deleteEvent(task.number)}>Delete</button>
         </form>
     );
 }
