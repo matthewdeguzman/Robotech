@@ -1,30 +1,55 @@
 class Task {
-  constructor(name, duration, priority) {
+  constructor(name, duration, workTime, priority, timeLeft) {
+    
+
+    if (duration > timeLeft) {
+      this.duration = timeLeft;
+    }
+    else {
+      this.duration = duration;
+    }
+    
+    this.priority = priority; // integer
     this.name = name; // string
+    this.timeLeft = timeLeft; // in hours
 
-    if (duration > 24) {
-      this.duration = 24;
-    } else if (duration < 1) {
-      this.duration = 1;
+    if (workTime > duration){
+      this.workTime = duration; // the amount of time allocated to work on the task per day in hours
+    }
+    else {
+      this.workTime = workTime;
+    }
+    
+    if (timeLeft <= 0){
+      this.priorityWeight = 0;
+      timeLeft = 0;
     } else {
-      this.duration = duration; // in hours
+      this.timeLeft = timeLeft;
     }
 
-    if (priority > 10) {
-      this.priority = 10;
-    } else if (priority < 1) { 
-      this.priority = 1;
-    } else {
-      this.priority = priority; // 1-10
-    }
+    this.priorityWeight =  Math.ceil(priority * duration / timeLeft);
+  }
+
+  // compare two tasks
+  equals(task) {
+    return this.name === task.name 
+    && this.duration === task.duration 
+    && this.priority === task.priority 
+    && this.timeLeft === task.timeLeft;
+  }
+  greaterThan(task){
+    // if the tasks have the same priority, compare the time left
+    return this.priorityWeight > task.priorityWeight;
   }
 }
 
 class Day {
-  constructor(month, day, year) {
-    this.day = day;
-    this.month = month;
-    this.year = year;
+  constructor(month, day, year, startTime, endTime) {
+      this.day = day;
+      this.month = month;
+      this.year = year;
+      this.startTime = startTime; // in hours
+      this.endTime = endTime; // in hours
     }
 
     // compare two days
@@ -52,92 +77,88 @@ class Day {
     toString() {
       return this.month + "/" + this.day + "/" + this.year;
     }
+
+    // time in between in hours
+    timeLeft(dueDate) {
+      let timeLeft = 0;
+      if (this.day.lessThan(dueDate)) {
+        timeLeft = (dueDate.day - this.day) * 24;
+        timeLeft += (dueDate.month - this.month) * 24 * 30;
+        timeLeft += (dueDate.year - this.year) * 24 * 30 * 12;
+      }
+      return timeLeft;
+    }
 }
 
 class Planner {
   // map of days to tasks
-  constructor() {
-    this.planner = new Map();
+  constructor(currDay) {
+    this.currDay = currDay;
+    this.planner = new Map(); // map of days to tasks
+    this.tasks = new Array();
+    this.workWeek = new Set();
   }
 
-  // add a task to the planner
-  addTask(task, day) {
-    if (this.planner.has(day) && !this.checkOverbooked(day) && task.duration + this.getDuration(day) <= 24) {
+  planTasks() {
+    this.sortTasks();
+    for (let task of this.tasks) {
+      let duration = task.duration;
+      let days = 0;
+      for (let dayWeek of this.workWeek) {
+        let timeslot = dayWeek.endTime - dayWeek.startTime;
+        let timeRemaining = task.timeLeft - (24 * days);
+        if (duration > 0 && timeslot > 0 && timeRemaining > 0) {
+          if (task.workTime <= timeslot) {
+            let newTask = new Task(task.name, duration, task.workTime, task.priority, timeRemaining);
+            this.pushTaskToDay(newTask, dayWeek);
+            duration -= task.workTime;
+            dayWeek.startTime += task.workTime;
+
+          }
+          else {
+            let newTask = new Task(task.name, duration, task.workTime, task.priority, timeRemaining);
+            this.pushTaskToDay(newTask, dayWeek);
+            duration -= timeslot;
+            dayWeek.startTime = dayWeek.endTime;
+          }
+        }
+        if (duration <= 0){
+          task.duration = 0;
+          break;
+        }
+        days++;
+      }
+    }
+  }
+
+  // add task to day
+  addTask(task) {
+    // add task to task set
+    this.tasks.push(task);
+  }
+
+  pushTaskToDay(task, day) {
+    if (this.planner.has(day)) {
       this.planner.get(day).push(task);
-      this.sortTasks(this.planner.get(day));
-    } else if (!this.planner.has(day)) {
+    } else {
       this.planner.set(day, [task]);
-    } else {
-      console.log("Sorry, " + task.name + " cannot be added");
     }
   }
 
-  // return the tasks for a given day
-  getTasks(day) {
-    return this.planner.get(day);
-  }
-
-  // sort tasks of the day by priority 10 being the highest priority
-  sortTasks(tasks) {
-    tasks.sort((a, b) => b.priority - a.priority);
-  }
-
-  // once a task has been completed
-  completeTask(task, day) {
-    task.priority = 0;
-    this.sortTasks(this.planner.get(day), day);
-  }
-
-  // get total duration of tasks for a day
-  getDuration(day) {
-    let duration = 0;
-    for (let tasks of this.planner.get(day)) {
-      duration += tasks.duration;
-    }
-    return duration;
-  }
-
-  // if duration of tasks for a day is greater than 24 hours
-  checkOverbooked(day) {
-    let duration = 0;
-    for (let tasks of this.planner.get(day)) {
-      duration += tasks.duration;
-    }
-    return duration > 24;
-  }
-
-  // check if a task has been completed
-  isCompleted(task) {
-    return task.priority === 0;
-  }
-
-  // change priority of a task
-  changePriority(task, priority) {
-    if (priority > 10) {
-      task.priority = 10;
-    } else if (priority < 1) {
-      task.priority = 1;
-    } else {
-      task.priority = priority;
-    }
+  // sort tasks list by priority 
+  sortTasks() {
+    this.tasks.sort((a, b) => {
+      return b.priorityWeight - a.priorityWeight;
+    });
   }
 
   // print planner
   printPlanner() {
-    for (let [key, value] of this.planner) {
-      console.log("List of tasks for " + key.toString() + ": ");
-      for (let task of value) {
-        console.log(task.name + " " + task.duration + " " + task.priority);
+    for (let [day, tasks] of this.planner) {
+      console.log("List of tasks for " + day.toString() + ": ");
+      for (let task of tasks) {
+        console.log(task.name + " " + task.duration + " " + task.priority + " " + task.workTime + " " + task.timeLeft);
       }
     }
   }
 }
-
-let planner = new Planner();
-
-planner.addTask(new Task("task1", 2, 5), new Day(1, 1, 2020));
-planner.addTask(new Task("task2", 2, 5), new Day(1, 1, 2020));
-planner.addTask(new Task("task3", 2, 5), new Day(1, 1, 2020));
-
-
-planner.printPlanner();
