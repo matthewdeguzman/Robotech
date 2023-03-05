@@ -23,7 +23,7 @@ const Task = (props) => {
                 type="text"
                 required
                 value={dueDate}
-                onChange={(e) => {task.date = e.target.value; setDueDate(e.target.value)}}/></div>
+                onChange={(e) => {task.dueDate = e.target.value; setDueDate(e.target.value)}}/></div>
             <div className="priority"><b>Priority: </b><input
                 type="text"
                 required

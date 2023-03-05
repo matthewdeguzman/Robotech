@@ -1,8 +1,3 @@
-
-
-
-
-
 const Task = (props) => {
     const tasks = props.tasks;
     return (
