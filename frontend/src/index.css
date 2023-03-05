@@ -31,6 +31,12 @@ button:hover {
   color: #EEEEEE;
   color: black;
 }
+
+input {
+  background-color:#24272A;
+  border: 0px;
+}
+
 .navbar {
   padding: 20px;
   display: flex;
@@ -39,6 +45,7 @@ button:hover {
   margin: 0 auto;
   border-bottom: 1px solid #f2f2f2;
 }
+
 .navbar h1 {
   color: #f1356d;
   align-items: center;
@@ -110,13 +117,20 @@ button:hover {
 .task:hover {
   box-shadow: 1px 3px 5px rgba(0,0,0,0.1);
 }
-.task h2 {
+.task label {
   font-size: 20px;
   color: #f1356d;
   margin-bottom: 8px;
+  font-weight: bold;
 }
 
 .add-event {
   position:absolute;
   left: 10px
 }
+
+.add-all {
+  position: absolute;
+  right: 10px;
+}
+

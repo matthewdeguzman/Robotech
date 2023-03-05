@@ -1,24 +1,19 @@
-import TaskList from "./TaskList";
+import Task from './Task';
 import {useState} from 'react'
 const uuidv4 = require('uuid').v4;
 
 const TaskManager = () => {
-    const[tasks, setTasks] = useState([
-        // {name: "Task #1", dueDate: "March 5th", priority: "10", duration: "3 hr", description: "This is the first task", number: "1"},
-        // {name: "Second Task", dueDate: "March 6th", priority: "8", duration: "2 hr", description: "This is the second task", number: "2"},
-        // {name: "Second Task", dueDate: "March 6th", priority: "8", duration: "2 hr", description: "This is the second task", number: "3"},
-        // {name: "Second Task", dueDate: "March 6th", priority: "8", duration: "2 hr", description: "This is the second task", number: "4"},
-        // {name: "Second Task", dueDate: "March 6th", priority: "8", duration: "2 hr", description: "This is the second task", number: "5"},
-        // {name: "Second Task", dueDate: "March 6th", priority: "8", duration: "2 hr", description: "This is the second task", number: "6"},
-        // {name: "Second Task", dueDate: "March 6th", priority: "8", duration: "2 hr", description: "This is the second task", number: "7"}
-    ]);
+    const[tasks, setTasks] = useState([]);
 
     
 
     function addEvent() {
-        
-        setTasks([...tasks, {name: "New Task", dueDate: "March 5th", priority: "10", duration: "3 hr", description: "This is the first task", number: uuidv4()}]);
-        console.log('fedhgfgdf')
+        const date = new Date();
+        setTasks([...tasks, {name: "Enter name", dueDate: date.getMonth() + 1 + "/" + date.getDate() + "/" + date.getFullYear(), priority: "10", duration: "01:00:00", description: "", number: uuidv4()}])
+    }
+
+    function addAll() {
+        console.log(tasks)
     }
 
     const deleteEvent = (taskNum) => {
@@ -33,7 +28,10 @@ const TaskManager = () => {
             <button className="add-event" onClick={addEvent}>Add Event</button>
         
             <div className="scroll-box">
-                <TaskList tasks={tasks} deleteEvent={deleteEvent}/>
+                <div className="task-list">
+                    {tasks && tasks.map((task) => ( <Task key={task.number} deleteEvent={deleteEvent} task={task}/>))}
+                </div>
+            <button className="add-all" onClick={addAll}> Add All Events</button>
             </div>
             
         </>
